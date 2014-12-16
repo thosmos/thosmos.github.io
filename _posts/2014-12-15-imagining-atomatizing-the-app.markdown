@@ -57,7 +57,7 @@ It is easier for me to read and seems to contain all of the same essential info,
         "Change authors"))))
 {% endhighlight %}
 
-and here its mapped abstraction:
+and here's a mapped abstraction:
 
 {% highlight clojure %}
 { :name :commentList
@@ -66,17 +66,18 @@ and here its mapped abstraction:
   :content [
     { :class "commentList"
       :content [
-        {:kind :comment, :loop :all}]}
+        {:kind :comment, :build :all}]}
     { :kind :button
       :onClick [:changeAuthor :state "Frederik"]
       :content "Change authors"}]}
 
 {% endhighlight %}
 
-I'm unsure about the mapping of the "build-all" macro, but I'm confident there's some reasonable way to represent it.  My impression is that the mapped form of the component delarations would be much easier for me to reason around with the aim of building an app that could read and write this structure.
+The mapping of the "build-all" macro seems a bit wonky, but I'm confident there's some reasonable way to represent it.  My impression is that the mapped form of the component delarations would be much easier for me to reason around with the aim of building an app that could read and write this structure.
 
-Plus, as if that weren't enough, there's a huge bonus to this approach: undo and change branching (and saving, and sharing) FOR FREE!  Non-programmers are overwhelmed enough trying to make a relatively sophistaced app, but this would make it much easier to save different versions, try something for a while, save it, go back a few steps, go in a different direction, save it, and then be able to browse around through the different versions.  This might even make it possible to more easily diff different versions.
+Plus, as if that weren't enough, there's a huge bonus to this approach: undo and change branching (and saving, and sharing) FOR FREE!  Non-programmers are overwhelmed enough trying to make a relatively sophisticated app, but this would make it much easier to save different versions, try something for a while, save it, go back a few steps, go in a different direction, save it, and then be able to browse around through the different versions.  This might even make it possible to more easily diff different versions.
 
+One caveat to this approach is that all proper functions will need to be saved and versioned outside of the the app-def atom.  Or they could be represented as strings and editied from within the builder app.  Unsure.  I negeclted to mention that I'm fairly new to clojure, only having worked through David Nolen's intro tutorial yesterday, so I'm sure I have much to learn and discover.
 
 
 [fredyr-gist]:      https://gist.github.com/fredyr/8460923
