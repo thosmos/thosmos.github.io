@@ -43,7 +43,7 @@ Clojure's Lispiness is very amenable to representing the tag nature of XML and H
    { :kind :span, :state :text}]}
 {% endhighlight %}
 
-It is easier for me to read and seems to contain all of the same essential info, without a lot of the repetitive code ([DRY](https://en.wikipedia.org/wiki/Don%27t_repeat_yourself)).  This declaration is taking advantage of some conventions.  One is that a component will pass to its children the same state that it received, unless otherwise stated (pun intended).  It's unnecesary to declare its input variables, and it only defines more refined sub-cursors when handing state to its children.  This declaration could be used to generate the CLJS code above.  This component uses no state of its own; it's just a container DIV.  This is another convention: a component is by default a DIV, unless otherwise noted.  Here's another more complex component, first in Om code:
+It's easier for me to read and seems to contain all of the same essential info, without a lot of the repetitive code ([DRY](https://en.wikipedia.org/wiki/Don%27t_repeat_yourself)).  This declaration is taking advantage of some conventions.  One is that a component will pass to its children the same state that it received, unless otherwise stated (pun intended).  It's unnecesary to declare its input variables, and it only defines more refined sub-cursors when handing state to its children.  This declaration could be used to generate the CLJS code above.  This component uses no state of its own; it's just a container DIV.  This is another convention: a component is by default a DIV, unless otherwise noted.  Here's another more complex component, first in Om code:
 
 {% highlight clojure %}
 (defn comment-list [cs owner]
@@ -56,6 +56,7 @@ It is easier for me to read and seems to contain all of the same essential info,
         {:onClick #(change-author cs "Fredrik")}
         "Change authors"))))
 {% endhighlight %}
+[source][fredyr-gist]
 
 and here's a mapped abstraction:
 
@@ -69,10 +70,14 @@ and here's a mapped abstraction:
     { :kind :button
       :onClick [:changeAuthor :state "Frederik"]
       :content "Change authors"}]}
-
 {% endhighlight %}
 
-The mapping of the "build-all" macro seems a bit wonky, but I'm confident there's some reasonable way to represent it.  Also, does this need a schema?  A Schema might be nice, but really, it's all convention over configuration, a la Enyo, yes?  My impression is that the mapped form would be much easier for me to reason around with the aim of building an app that could read and write this structure.  These structures would be the blueprint from which to actually output the clojure code above.  It's the equivalent of the relationship between the data in the atom and its runtime representation to the user.
+The mapping of the "build-all" macro seems a bit wonky, but I'm confident there's some reasonable way to represent it.  Also, does this need a schema?  A Schema might be nice, but really, it's all convention over configuration, a la Enyo, yes?  Hmmm ... 
+
+Here's a full mapping with its original:
+https://gist.github.com/thos37/2d3dae5ce298f8a952b8
+
+My impression is that the mapped form would be much easier for me to reason around with the aim of building an app that could read and write this structure.  These structures would be the blueprint from which to actually output the clojure code above.  It's the equivalent of the relationship between the data in the atom and its runtime representation to the user.
 
 Plus, as if that weren't enough, there's a huge bonus to this approach: undo and change branching (and saving, and sharing) of the app itself, FOR FREE!  Non-programmers are overwhelmed enough trying to make a relatively sophisticated app, but this would make it much easier to save different versions, try something for a while, save it, go back a few steps, go in a different direction, save it, and then be able to browse around through the different versions.  This might even make it possible to more easily diff different versions.
 
