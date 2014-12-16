@@ -74,8 +74,7 @@ and here's a mapped abstraction:
 
 The mapping of the "build-all" macro seems a bit wonky, but I'm confident there's some reasonable way to represent it.  Also, does this need a schema?  A Schema might be nice, but really, it's all convention over configuration, a la Enyo, yes?  Hmmm ... 
 
-Here's a full mapping with its original:
-https://gist.github.com/thos37/2d3dae5ce298f8a952b8
+[Here's a full mapping with its original](https://gist.github.com/thos37/2d3dae5ce298f8a952b8)
 
 My impression is that the mapped form would be much easier for me to reason around with the aim of building an app that could read and write this structure.  These structures would be the blueprint from which to actually output the clojure code above.  It's the equivalent of the relationship between the data in the atom and its runtime representation to the user.
 
