@@ -1,0 +1,10 @@
+# Site settings
+title: thosmology
+description: "A study of the universe from the unique perspective of Thomas Spellman"
+baseurl: "" # the subpath of your site, e.g. /blog/
+url: "https://thos37.github.io" # the base hostname & protocol for your site
+twitter_username: thosmos
+github_username:  thos37
+
+# Build settings
+markdown: kramdown
