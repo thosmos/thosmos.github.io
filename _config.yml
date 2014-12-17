@@ -1,5 +1,5 @@
 # Site settings
-title: Coding the Thosmos
+title: Coding the τhosmos
 description: "Programming the universe one byte at a time"
 baseurl: "" # the subpath of your site, e.g. /blog/
 url: "https://code.thosmos.com" # the base hostname & protocol for your site
