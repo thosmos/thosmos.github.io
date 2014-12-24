@@ -4,7 +4,65 @@ title:  "Resume"
 date:   2014-12-23 21:35:43
 categories: resume
 ---
-Thomas Spellman
-13850 Marigold Way
-Nevada City, CA 95959
+Thomas Spellman <br>
+13850 Marigold Way <br>
+Nevada City, CA 95959 <br>
+530.264.5137<br>
+thomas  *-at-*  thosmos.com
+
+
+### CloudPay, CTO, 2012 - present
+
+* Developed scalable mobile payments backend and mobile wallet UI
+
+### Embedded Systems Lab, Contractor, 2012 - present
+
+#### Innovative Health Solutions
+
+<ul>
+<li>  Worked solo to accomplish necessary improvements on all levels from hardware to host app.</li>
+<li>  Redesigned microcontroller hardware circuit to solve multichip clock timing problems.</li>
+<li>  Optimized 8bit C firmware to operate at its maximum bandwidth.</li>
+<li>  Modified C# UI to fix display problems, fixed proprietary binary protocol.</li>
+</ul>
+
+#### FLIR
+
+* Worked with FLIR's dev team to handle a portion of the rapid R&D needed to meet the timeline.
+* Implemented multi-threaded control app to manage the multi-core processing pipeline.
+
+### Rock the Bike, Engineer, 2010 - present
+
+* Designed microcontoller hardware, firmware, and mobile app dashboard for real time monitoring of pedal powered sound systems, used at EcoChella 2014 and Maker Fair 2014.
+
+### Burning Man, Playa, 2012 - 2014
+
+* Designed 1000W 90 channel RGB LED art car lighting system with a mobile app for control.
+
+### SoftwareFlair, UI Engineer. 2004 - 2012
+
+#### Densitron
+
+* Optimized RipDraw graphics display pipeline to achieve 60fps animation speed.
+
+#### Discera
+
+* Worked with lead hardware engineer on a firmware updating UI.
+
+#### Continental Electronics Corp.
+
+* Designed next generation embedded RF amplifer UI.
+* Real time MVC architeture, communicating over a proprietary binary protocol with an embedded linux backend.
+
+#### Matrix Switch Corp.
+
+* Designed firmware update and control UI.
+
+### SYRCL, DB Contractor, 2006
+
+* Designed science data monitoring and reporting database, based on state standards, but with improved scalability and customizability.
+
+### NCTV, Software Engineer, 2003
+
+* Designed mission critical automated routing and playlist control applications that integrated daily program scheduling workflow with Grass Valley Group digital video playout servers.
 
