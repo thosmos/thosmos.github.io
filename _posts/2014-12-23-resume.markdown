@@ -1,0 +1,10 @@
+---
+layout: post
+title:  "Resume"
+date:   2014-12-23 21:35:43
+categories: resume
+---
+Thomas Spellman
+13850 Marigold Way
+Nevada City, CA 95959
+
