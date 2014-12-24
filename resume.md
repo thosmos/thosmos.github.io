@@ -1,5 +1,5 @@
 ---
-layout: post
+layout: page
 title:  "Resume"
 date:   2014-12-23 21:35:43
 categories: resume
