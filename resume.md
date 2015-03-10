@@ -67,7 +67,7 @@ thos  *-at-*  thosmos.com
 
 * Created a water quality data monitoring and reporting database, based on CA state standards, but with improved scalability and customizability.
 
-### Friends of Deer Creek, 2004
+### Friends of Deer Creek, Tech Contractor, 2004
 
 * Created an Access database for handling and reporting water quality data
 
