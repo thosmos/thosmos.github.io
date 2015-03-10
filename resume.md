@@ -1,7 +1,7 @@
 ---
 layout: page
 title:  "Resume"
-date:   2014-12-23 21:35:43
+date:   2015-03-10 09:00:00
 categories: resume
 ---
 Thomas Spellman <br>
@@ -13,9 +13,9 @@ thos  *-at-*  thosmos.com
 
 ### CloudPay, CTO, 2012 - present
 
-* Developed scalable mobile payments backend and mobile wallet UI
+* Developed instant payments/rewards backend and HTML5 mobile wallet UI
 
-### Embedded Systems Lab, Contractor, 2012 - present
+### Embedded Systems Lab, Contractor, 2012 - 2014
 
 #### Innovative Health Solutions
 
@@ -28,16 +28,16 @@ thos  *-at-*  thosmos.com
 
 #### FLIR
 
+* Implemented embedded control app to manage a multi-core infrared video processing pipeline.
 * Worked with FLIR's dev team to handle a portion of the rapid R&D needed to meet the timeline.
-* Implemented multi-threaded control app to manage the multi-core processing pipeline.
 
-### Rock the Bike, Engineer, 2010 - present
+### Rock the Bike, Engineer Contractor, 2010 - present
 
 * Designed microcontoller hardware, firmware, and mobile app dashboard for real time monitoring of pedal powered sound systems, used at EcoChella 2014 and Maker Fair 2014.
 
 ### Burning Man, Playa, 2012 - 2014
 
-* Designed 1000W 90 channel RGB LED art car lighting system with a mobile app for control.
+* Designed a 1,000W 90 channel RGB LED art car lighting system with a mobile app for wireless control.
 
 ### SoftwareFlair, UI Engineer. 2004 - 2012
 
@@ -51,8 +51,13 @@ thos  *-at-*  thosmos.com
 
 #### Continental Electronics Corp.
 
-* Designed next generation embedded RF amplifer UI.
+* Designed and built next generation embedded RF amplifer UI.
 * Real time MVC architeture, communicating over a proprietary binary protocol with an embedded linux backend.
+
+#### IGT
+
+* Built a central server, database, and management app for a 3 tier multi-site wireless distributed data collection system
+* Contributed to the Zigbee Arm6 code that collected and relayed data through an on-site relay up to the central server  
 
 #### Matrix Switch Corp.
 
@@ -60,7 +65,11 @@ thos  *-at-*  thosmos.com
 
 ### SYRCL, DB Contractor, 2006
 
-* Designed science data monitoring and reporting database, based on state standards, but with improved scalability and customizability.
+* Created a water quality data monitoring and reporting database, based on CA state standards, but with improved scalability and customizability.
+
+### Friends of Deer Creek, 2004
+
+* Created an Access database for handling and reporting water quality data
 
 ### NCTV, Software Engineer, 2003
 
