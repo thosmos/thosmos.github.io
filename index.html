@@ -58,58 +58,22 @@
 <div id="post">
     <div class="post-header">
     <div id="post-meta" class="row">
-        <div class="col-lg-6">December 15, 2014</div>
+        <div class="col-lg-6">September 8, 2015</div>
         
     </div>
-    <h2>Imagining atomatizing the App</h2>
+    <h2>Data Driven</h2>
 </div>
 <div>
     
-    <p>This morning, while reflecting on a late night of working through <a href='https://swannodette.github.io'>David Nolen</a>'s (<a href='https://github.com/swannodette'>swannodette</a>) Intro to Clojurescript and <a href='https://github.com/swannodette/om'>Om</a> <a href='https://github.com/swannodette/om/wiki/Basic-Tutorial'>Basic Tutorial</a>, I had an epiphany, an insight into a solution to a problem I've been working on for about 15 years.  The goal I've been seeking is an elegant app for a non-programmer user to create a custom, elegant scientific data collection and visualization app.  It requires building up a data survey from simple and complex data types, possibly based on an existing denormalized database schema, and linking that with an easily customizable data entry screen.  It's kind of like Access, but more complex while also easier to use.  Yes, a paradox.  <a href='https://en.wikipedia.org/wiki/XRX&#95;%28web&#95;application&#95;architecture%29'>XRX</a> is a major step in the right direction, but the designed by commitee feel and actually writing and reading XML and XQuery leaves something to be desired.  However, I've never really given it a chance and it could be great.  I like the document store approach of eXistDB, similar to MongoDB for JSON data.  <a href='https://opendatakit.org/'>ODK</a> is doing amazing things with XRX, but only by reverting to HTML and javascript for the UI.</p><p>I've taken a few runs at the solution over the years, starting with a naive PHP app in the foggy beginning of my programming career, and a couple of paid database gigs for clients for similar needs, but I have yet to attain the degree of Nirvana I know is possible.  When I became familiar with Clojure, I intuited that it would probably be much more useful for the job, due to its homoiconic nature, being represented in its own data format and amenable to meta-programming, and to its immutable data types - a severely useful toolbox.  But the language has been opaque to me, and simultaneously both too complex and too simple to see how to use it to its fullest ... until this morning.  Suddenly, while looking through my bay windows to the trees behind my monitor, I saw the architecture I needed to use.  Kind of a mix between a spreadsheet tree, data schema UML, Pure Data wiring, a Swift playground, etc, but that changes based on position within the multidimensional data abstraction context tree.</p><p>One possible step toward making this app easier to contemplate is the definition of the app itself, which Om's component-based nature aids.  However, I'm wondering if there's an additional step of abstraction that could be taken to a simpler declarative definition of the app, which would be easier for a user or a builder app to construct and edit.  For example, here's a prototypical Om component definition:</p><pre><code>    &#40;defn comment &#91;{:keys &#91;author text&#93;} owner&#93;
-      &#40;om/component
-        &#40;dom/div #js {:className &quot;comment&quot;}
-          &#40;dom/h2 nil author&#41;
-          &#40;dom/span nil text&#41;&#41;&#41;&#41;
-</code></pre><a href='https://gist.github.com/fredyr/8460923'>https://gist.github.com/fredyr/8460923</a><p>It's a very nice declarative way to define a component, and reminds me of Enyo's nested declarative javascript component model:</p><pre><code class="javascript">{kind: &quot;onyx.Button&quot;, name:&quot;Image Button&quot;, ontap:&quot;buttonTapped&quot;, components: &#91;
-  {tag: &quot;img&quot;, attributes: {src: &quot;assets/enyo-logo-small.png&quot;}},
-  {content: &quot;There is an image here&quot;}
-&#93;}
-</code></pre><a href='https://github.com/enyojs/onyx/blob/master/samples/ButtonSample.js'>https://github.com/enyojs/onyx/blob/master/samples/ButtonSample.js</a><p>Enyo is the closest tool I've found yet to enabling the workflow I need.  However, it feels funky.  I know, I'm picky.</p><p>Clojure's Lispiness is very amenable to representing the tag nature of XML and HTML, and is preferrable if the UI is being generated programmatically anyway.  In that vein, Enyo's definition is more clear in some ways because it is simpler, relying on a convention or schema for being converted into running code.  But what if the Om approach were to be similarly abstracted further?  Can the following simpler version work?</p><pre><code class="clojure">{ :name :comment
-  :class &quot;comment&quot;
-  ;:kind :div ; :div is the default
-  :content &#91;
-   { :kind :h2, :state :author}
-   { :kind :span, :state :text}&#93;}
-</code></pre><p>It's easier for me to read and seems to contain all of the same essential info, without a lot of the repetitive code (<a href='https://en.wikipedia.org/wiki/Don%27t&#95;repeat&#95;yourself'>DRY</a>).  This declaration is taking advantage of some conventions.  One is that a component will pass to its children the same state that it received, unless otherwise stated (pun intended).  It's unnecesary to declare its input variables, and it only defines more refined sub-cursors when handing state to its children.  This declaration could be used to generate the CLJS code above.  This component uses no state of its own; it's just a container DIV.  This is another convention: a component is by default a DIV, unless otherwise noted.  Here's another more complex component, first in Om code:</p><pre><code class="clojure">&#40;defn comment-list &#91;cs owner&#93;
-  &#40;om/component
-    &#40;dom/div nil
-      &#40;dom/div #js {:className &quot;commentList&quot;}
-        ;; Helper function build-all builds a vector of components
-        &#40;om/build-all comment cs&#41;&#41;
-      &#40;dom/button #js
-        {:onClick #&#40;change-author cs &quot;Fredrik&quot;&#41;}
-        &quot;Change authors&quot;&#41;&#41;&#41;&#41;
-
-</code></pre>from: <a href='https://gist.github.com/fredyr/8460923'>https://gist.github.com/fredyr/8460923</a><p>and here's a mapped abstraction:</p><pre><code class="clojure">{ :name :commentList
-  :state &#91;:comment&#93; ; Declares that this component accepts a vector of :comment components.
-  :content &#91;
-    { :class &quot;commentList&quot;
-      :content &#91;
-        {:kind :comment, :build :all}&#93;}
-    { :kind :button
-      :onClick &#91;:changeAuthor :state &quot;Frederik&quot;&#93;
-      :content &quot;Change authors&quot;}&#93;}
-</code></pre><p>The mapping of the "build-all" macro seems a bit wonky, but I'm confident there's some reasonable way to represent it.  Also, does this need a schema?  A Schema might be nice, but really, it's all convention over configuration, a la Enyo, yes?  Hmmm ...</p><p><a href='https://gist.github.com/thos37/2d3dae5ce298f8a952b8'>Here's a full mapping with its original</a></p><p>My impression is that the mapped form would be much easier for me to reason around with the aim of building an app that could read and write this structure.  These structures would be the blueprint from which to actually output the clojure code above.  It's the equivalent of the relationship between the data in the atom and its runtime representation to the user.</p><p>Plus, as if that weren't enough, there's a huge bonus to this approach: undo and change branching (and saving, and sharing) of the app itself, FOR FREE!  Non-programmers are overwhelmed enough trying to make a relatively sophisticated app, but this would make it much easier to save different versions, try something for a while, save it, go back a few steps, go in a different direction, save it, and then be able to browse around through the different versions.  This might even make it possible to more easily diff different versions.</p><p>One caveat to this approach is that functions will need to be saved and versioned outside of the the app-def atom.  Or they can be represented as strings and edited from within the builder app.  I neglected to mention that I'm fairly new to clojure, only having worked through David Nolen's intro tutorial yesterday, so I have much to learn and discover of the Joys of Clojure.</p>
+    <p>It's funny to look back on my previous post from years ago.  It was written literally a day or two before I watched a talk by Paul de Grandis called, <a href='https://www.youtube.com/watch?v=BNkYYYyfF48'>Unlocking Data-Driven Systems</a>, in which he described a system closer to what I'd imagined than anything I've seen.  It inspired me to go much further with Clojure.  In fact, I've spent the past year and half dedicated to learning and working in Clojure, even building my current project with it, <a href='https://take2.org'>Take2.org</a>.  Though I have yet to re-tackle the original project that inspired my previous post, the possibility still exists, and the inspiration returns semi-regularly.<br /></p>
 </div>
 
 <div id="post-tags">
     <b>Tags: </b>
     
-    <a href="/tags/om.html">om</a>
+    <a href="/tags/clojure.html">clojure</a>
     
     <a href="/tags/data-driven.html">data-driven</a>
-    
-    <a href="/tags/clojurescript.html">clojurescript</a>
     
 </div>
 
@@ -118,6 +82,8 @@
 
     <div id="prev-next">
         
+        
+        <a class="right" href="/posts/2014-12-15-imagining-atomatizing-the-app.html">Imagining atomatizing the App &raquo;</a>
         
     </div>
 </div>
@@ -164,6 +130,8 @@
                     <h3>Recent Posts</h3>
                     <ul>
                         
+                        <li><a href="/posts/2015-09-08-data-driven.html">Data Driven</a></li>
+                        
                         <li><a href="/posts/2014-12-15-imagining-atomatizing-the-app.html">Imagining atomatizing the App</a></li>
                         
                     </ul>
@@ -174,9 +142,11 @@
                     <h3>Tags</h3>
                     <ul>
                         
-                        <li><a href="/tags/om.html">om</a></li>
+                        <li><a href="/tags/clojure.html">clojure</a></li>
                         
                         <li><a href="/tags/data-driven.html">data-driven</a></li>
+                        
+                        <li><a href="/tags/om.html">om</a></li>
                         
                         <li><a href="/tags/clojurescript.html">clojurescript</a></li>
                         

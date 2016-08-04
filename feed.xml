@@ -12,11 +12,31 @@ http://code.thosmos.com/
 
 </description>
 <lastBuildDate>
-Mon, 07 Sep 2015 10:20:25 -0700
+Thu, 04 Aug 2016 13:27:08 -0700
 </lastBuildDate>
 <generator>
 clj-rss
 </generator>
+<item>
+<guid>
+http://code.thosmos.com/posts/2015-09-08-data-driven.html
+</guid>
+<link>
+http://code.thosmos.com/posts/2015-09-08-data-driven.html
+</link>
+<title>
+Data Driven
+</title>
+<description>
+&lt;p&gt;It's funny to look back on my previous post from years ago.  It was written literally a day or two before I watched a talk by Paul de Grandis called, &lt;a href='https://www.youtube.com/watch?v=BNkYYYyfF48'&gt;Unlocking Data-Driven Systems&lt;/a&gt;, in which he described a system closer to what I'd imagined than anything I've seen.  It inspired me to go much further with Clojure.  In fact, I've spent the past year and half dedicated to learning and working in Clojure, even building my current project with it, &lt;a href='https://take2.org'&gt;Take2.org&lt;/a&gt;.  Though I have yet to re-tackle the original project that inspired my previous post, the possibility still exists, and the inspiration returns semi-regularly.&lt;br /&gt;&lt;/p&gt;
+</description>
+<enclosure>
+
+</enclosure>
+<pubDate>
+Tue, 08 Sep 2015 00:00:00 -0700
+</pubDate>
+</item>
 <item>
 <guid>
 http://code.thosmos.com/posts/2014-12-15-imagining-atomatizing-the-app.html
@@ -64,6 +84,9 @@ Imagining atomatizing the App
       :content &amp;quot;Change authors&amp;quot;}&amp;#93;}
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The mapping of the &quot;build-all&quot; macro seems a bit wonky, but I'm confident there's some reasonable way to represent it.  Also, does this need a schema?  A Schema might be nice, but really, it's all convention over configuration, a la Enyo, yes?  Hmmm ...&lt;/p&gt;&lt;p&gt;&lt;a href='https://gist.github.com/thos37/2d3dae5ce298f8a952b8'&gt;Here's a full mapping with its original&lt;/a&gt;&lt;/p&gt;&lt;p&gt;My impression is that the mapped form would be much easier for me to reason around with the aim of building an app that could read and write this structure.  These structures would be the blueprint from which to actually output the clojure code above.  It's the equivalent of the relationship between the data in the atom and its runtime representation to the user.&lt;/p&gt;&lt;p&gt;Plus, as if that weren't enough, there's a huge bonus to this approach: undo and change branching (and saving, and sharing) of the app itself, FOR FREE!  Non-programmers are overwhelmed enough trying to make a relatively sophisticated app, but this would make it much easier to save different versions, try something for a while, save it, go back a few steps, go in a different direction, save it, and then be able to browse around through the different versions.  This might even make it possible to more easily diff different versions.&lt;/p&gt;&lt;p&gt;One caveat to this approach is that functions will need to be saved and versioned outside of the the app-def atom.  Or they can be represented as strings and edited from within the builder app.  I neglected to mention that I'm fairly new to clojure, only having worked through David Nolen's intro tutorial yesterday, so I have much to learn and discover of the Joys of Clojure.&lt;/p&gt;
 </description>
+<enclosure>
+
+</enclosure>
 <pubDate>
 Mon, 15 Dec 2014 00:00:00 -0800
 </pubDate>
