@@ -12,7 +12,7 @@ http://code.thosmos.com/
 
 </description>
 <lastBuildDate>
-Tue, 11 Oct 2016 00:13:13 -0700
+Tue, 11 Oct 2016 00:25:55 -0700
 </lastBuildDate>
 <generator>
 clj-rss
@@ -102,7 +102,7 @@ http://code.thosmos.com/posts/2013-05-01-geometric-algebra-with-clojure-1.html
 Geometric Algebra with Clojure - Part 1
 </title>
 <description>
-&lt;p&gt;It's funny to look back on my previous post from years ago.  It was written literally a day or two before I watched a talk by Paul de Grandis called, &lt;a href='https://www.youtube.com/watch?v=BNkYYYyfF48'&gt;Unlocking Data-Driven Systems&lt;/a&gt;, in which he described a system closer to what I'd imagined than anything I've seen.  It inspired me to go much further with Clojure.  In fact, I've spent the past year and half dedicated to learning and working in Clojure, even building my current project with it, &lt;a href='https://take2.org'&gt;Take2.org&lt;/a&gt;.  Though I have yet to re-tackle the original project that inspired my previous post, the possibility still exists, and the inspiration returns semi-regularly.&lt;br /&gt;&lt;/p&gt;&lt;p&gt;I've been exploring Geometric Algebra (GA) and Clojure for a while, and I'm finding some potential to combine my learning of both. Here are my first steps on a Mac: &lt;ol&gt;  	&lt;li&gt;Download and install GaiGen2.5 (http://sourceforge.net/projects/g25/) which is a GA code generator for a variety of languages, including java.&lt;/li&gt;  	&lt;li&gt;Generate some sample algebra specs, generate the code from the sample Conformal 3d Java spec file, compile, and package into a jar.  I get a warning, &quot;Warning: No operator bindings are possible for output language Java.&quot;  I wonder if Gaigen would benefit from being rewritten in Clojure, to gain from its metaprogramming capabilities ...&lt;/li&gt;         &lt;/p&gt;&lt;pre&gt;&lt;code&gt;cd &amp;#126;/Develop/GA/gaigen25/
+&lt;p&gt;I've been exploring Geometric Algebra (GA) and Clojure for a while, and I'm finding some potential to combine my learning of both. Here are my first steps on a Mac: &lt;ol&gt;  	&lt;li&gt;Download and install GaiGen2.5 (http://sourceforge.net/projects/g25/) which is a GA code generator for a variety of languages, including java.&lt;/li&gt;  	&lt;li&gt;Generate some sample algebra specs, generate the code from the sample Conformal 3d Java spec file, compile, and package into a jar.  I get a warning, &quot;Warning: No operator bindings are possible for output language Java.&quot;  I wonder if Gaigen would benefit from being rewritten in Clojure, to gain from its metaprogramming capabilities ...&lt;/li&gt;         &lt;/p&gt;&lt;pre&gt;&lt;code&gt;cd &amp;#126;/Develop/GA/gaigen25/
 g25&amp;#95;test&amp;#95;generator -sa .
 cd TestG25
 g25 c3ga&amp;#95;java/c3ga&amp;#95;java.xml
