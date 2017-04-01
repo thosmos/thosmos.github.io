@@ -12,7 +12,7 @@ http://code.thosmos.com/
 
 </description>
 <lastBuildDate>
-Sat, 01 Apr 2017 07:25:46 -0700
+Sat, 01 Apr 2017 07:29:07 -0700
 </lastBuildDate>
 <generator>
 clj-rss
@@ -28,7 +28,7 @@ http://code.thosmos.com/posts/2015-09-08-data-driven.html
 Data Driven
 </title>
 <description>
-&lt;p&gt;It's funny to look back on my previous post from years ago.  It was written literally a day or two before I watched a talk by Paul de Grandis called, &lt;a href='https://www.youtube.com/watch?v=BNkYYYyfF48'&gt;Unlocking Data-Driven Systems&lt;/a&gt;, in which he described a system closer to what I'd imagined than anything I've seen.  It inspired me to go much further with Clojure.  In fact, I've spent the past year and half dedicated to learning and working in Clojure, even building my current project with it, &lt;a href='https://take2.org'&gt;Take2.org&lt;/a&gt;.  Though I have yet to re-tackle the original project that inspired my previous post, the possibility still exists, and the inspiration returns semi-regularly.&lt;/p&gt;&lt;p&gt;  UPDATE 2017-04-01: I just experienced my first ClojureWest and I met Paul de Grandis and a bunch of other amazing Clojurists.   It was very inspiring and I'm impressed with how welcoming and friendly the community is.  I'm now planning to work on the   aforementioned science data management project starting after Summer Solstice, so it really seems like forces are aligning   for this to happen.  At ClojureWest I learned a ton of approaches and solutions that are relevant, so I'm excited to apply   what I've learned.&lt;/p&gt;
+&lt;p&gt;It's funny to look back on my previous post from years ago.  It was written literally a day or two before I watched a talk by Paul de Grandis called, &lt;a href='https://www.youtube.com/watch?v=BNkYYYyfF48'&gt;Unlocking Data-Driven Systems&lt;/a&gt;, in which he described a system closer to what I'd imagined than anything I've seen.  It inspired me to go much further with Clojure. In fact, I've spent the past year and a half dedicated to learning and working in Clojure, even building my current project with it, &lt;a href='https://take2.org'&gt;Take2.org&lt;/a&gt;.  Though I have yet to re-tackle the original project that inspired my previous post, the possibility still exists, and the inspiration returns semi-regularly.&lt;/p&gt;&lt;p&gt;  UPDATE 2017-04-01: I just experienced my first &lt;a href='http://2017.clojurewest.org/'&gt;ClojureWest&lt;/a&gt; and I met Paul de Grandis and a bunch of other amazing Clojurists.   It was very inspiring and I'm impressed with how welcoming and friendly the community is.  I'm now planning to work on the   aforementioned science data management project starting after Summer Solstice, so it really seems like forces are aligning   for this to happen.  At ClojureWest I learned a ton of approaches and solutions that are relevant, so I'm excited to apply   what I've learned.&lt;/p&gt;
 </description>
 <enclosure>
 
