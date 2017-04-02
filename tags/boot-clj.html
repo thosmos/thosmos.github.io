@@ -2,14 +2,14 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
     <meta charset="utf-8"/>
-    <title>Coding the τhosmos</title>
+    <title>Coding the τhosmos: Posts Tagged &quot;boot-clj&quot;</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href='http://fonts.googleapis.com/css?family=Alegreya:400italic,700italic,400,700' rel='stylesheet'
           type='text/css'>
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css">
     <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.1/styles/default.min.css">
-    <link href="css/screen.css" rel="stylesheet" type="text/css" />
+    <link href="/css/screen.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
 
@@ -27,7 +27,7 @@
         </div>
         <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav navbar-right">
-                <li  class="active" ><a href="/index.html">Home</a></li>
+                <li ><a href="/index.html">Home</a></li>
                 <li
                 ><a href="/archives.html">Archives</a></li>
                 
@@ -55,72 +55,17 @@
         <div class="col-lg-9">
             <div id="content">
                 
-<div id="post">
-    <div class="post-header">
-    <div id="post-meta" class="row">
-        <div class="col-lg-6">April 2, 2017</div>
-        
+<div id="posts-by-tag">
+    <div id="page-header">
+        <h2>Posts Tagged &quot;boot-clj&quot;</h2>
     </div>
-    <h2>Boot-clj Startup</h2>
-</div>
-<div>
+    <ul>
     
-    <p>After having a great conversation with [Mike Kaplisky[(https://twitter.com/mkaplinskiy) about how to optimize a Clojure build chain to be as fast as possible (they use <a href='https://buckbuild.com/'>Buck</a> at <a href='https://www.ladderlife.com/'>Ladder</a>), I was inspired to look at <a href='http://boot-clj.com/'>Boot-clj</a>, my preferred build tool, with some fresh and curious eyes.  I'd like to understand better how Boot works under the hood, so I figure a good way to start is to time some various pieces of it in comparison with lein, clojure, and the JVM.</p><p>To start with, let's create a hello world boot-built app:</p><pre><code class="bash">boot -d boot/new new -t app -n myapp
-</code></pre><p>By default, after loading deps with an initial run, it takes about 40s to build a jar.</p><pre><code>time boot build
-
-Compiling 1/1 hello.core...
-Writing pom.xml and pom.properties...
-Adding uberjar entries...
-Writing hello-0.1.0-SNAPSHOT-standalone.jar...
-Writing target dir&#40;s&#41;...
-
-36.62s user 5.61s system 267% cpu 15.780 total
-</code></pre><p>Let's add a super basic boot task to <code>build.boot</code> that does nothing:</p><pre><code class="clojure">&#40;deftask noop
-  &quot;the simplest boot task&quot;
-  &#91;&#93;
-  identity&#41;
-</code></pre><pre><code>time boot noop
-
-17.88s user 0.83s system 380% cpu 4.920 total
-</code></pre><p>It takes 18s cpu time, 5s real time, just to do nothing!  At least it's using all my 4 cores.</p><p>Let's compare this with a hello world java app:</p><pre><code class="java">// Hello.java
-public class Hello {
-    public static void main&#40;String&#91;&#93; args&#41;{
-        System.out.println&#40;&quot;Hello world&quot;&#41;;
-    }
-}
-</code></pre><pre><code>javac Hello.java
-
-time java Hello
-
-0.12s user 0.04s system 103% cpu 0.149 total
-</code></pre><p>0.15 secs!  That's amazing!  Now let's compare that with running our Clojure hello world:</p><pre><code>time java -jar target/hello-0.1.0-SNAPSHOT-standalone.jar
-
-2.57s user 0.16s system 196% cpu 1.395 total
-</code></pre><p>1.4 secs ... There's a big time difference there from the java hello world, but it's still much faster than running an empty boot task. What causes a bare boot bottup to take so long?</p>
-</div>
-
-<div id="post-tags">
-    <b>Tags: </b>
+        <li>
+            <a href="/posts/2017-04-02-boot-clj-startup.html">Boot-clj Startup</a>
+        </li>
     
-    <a href="/tags/clojure.html">clojure</a>
-    
-    <a href="/tags/boot-clj.html">boot-clj</a>
-    
-</div>
-
-
-    
-    <div id="comments">
-        <a href="/posts/2017-04-02-boot-clj-startup.html#disqus_thread">View Comments</a>
-    </div>
-    
-
-    <div id="prev-next">
-        
-        
-        <a class="right" href="/posts/2015-09-08-data-driven.html">Data Driven &raquo;</a>
-        
-    </div>
+    </ul>
 </div>
 
             </div>
@@ -202,7 +147,7 @@ time java Hello
 </div>
 <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
 <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
-<script src="js/highlight.pack.js" type="text/javascript"></script>
+<script src="/js/highlight.pack.js" type="text/javascript"></script>
 <script>hljs.initHighlightingOnLoad();</script>
 </body>
 </html>
