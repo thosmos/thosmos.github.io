@@ -65,7 +65,7 @@
 </div>
 <div>
     
-    <p>After having a great conversation with [Mike Kaplisky[(https://twitter.com/mkaplinskiy) about how to optimize a Clojure build chain to be as fast as possible (they use <a href='https://buckbuild.com/'>Buck</a> at <a href='https://www.ladderlife.com/'>Ladder</a>), I was inspired to look at <a href='http://boot-clj.com/'>Boot-clj</a>, my preferred build tool, with some fresh and curious eyes.  I'd like to understand better how Boot works under the hood, so I figure a good way to start is to time some various pieces of it in comparison with lein, clojure, and the JVM.</p><p>To start with, let's create a hello world boot-built app:</p><pre><code class="bash">boot -d boot/new new -t app -n myapp
+    <p>After having a great conversation with <a href='https://twitter.com/mkaplinskiy'>Mike Kaplisky</a> about how to optimize a Clojure build chain to be as fast as possible (they use <a href='https://buckbuild.com/'>Buck</a> at <a href='https://www.ladderlife.com/'>Ladder</a>), I was inspired to look at <a href='http://boot-clj.com/'>Boot-clj</a>, my preferred build tool, with some fresh and curious eyes.  I'd like to understand better how Boot works under the hood, so I figure a good way to start is to time some various pieces of it in comparison with lein, clojure, and the JVM.</p><p>To start with, let's create a hello world boot-built app:</p><pre><code class="bash">boot -d boot/new new -t app -n myapp
 </code></pre><p>By default, after loading deps with an initial run, it takes about 40s to build a jar.</p><pre><code>time boot build
 
 Compiling 1/1 hello.core...
