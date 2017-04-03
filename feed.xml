@@ -12,7 +12,7 @@ http://code.thosmos.com/
 
 </description>
 <lastBuildDate>
-Mon, 03 Apr 2017 12:31:05 -0700
+Mon, 03 Apr 2017 12:33:33 -0700
 </lastBuildDate>
 <generator>
 clj-rss
@@ -29,7 +29,7 @@ Boot-clj Startup
 </title>
 <description>
 &lt;p&gt;After having a great conversation with &lt;a href='https://twitter.com/mkaplinskiy'&gt;Mike Kaplisky&lt;/a&gt; about how to optimize a Clojure build chain to be as fast as possible (they use &lt;a href='https://buckbuild.com/'&gt;Buck&lt;/a&gt; at &lt;a href='https://www.ladderlife.com/'&gt;Ladder&lt;/a&gt;), I was inspired to look at &lt;a href='http://boot-clj.com/'&gt;Boot-clj&lt;/a&gt;, my preferred build tool, with some fresh and curious eyes.  I'd like to understand better how Boot works under the hood, so I figure a good way to start is to time some various pieces of it in comparison with lein, clojure, and the JVM.&lt;/p&gt;&lt;p&gt;To start with, let's create a hello world boot-built app:&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;bash&quot;&gt;boot -d boot/new new -t app -n hello
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;By default, after loading deps with an initial run, it takes about 40s to build a jar.&lt;/p&gt;&lt;pre&gt;&lt;code&gt;time boot build
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;By default, after loading deps with an initial run, it takes about 16 sec to build a jar.&lt;/p&gt;&lt;pre&gt;&lt;code&gt;time boot build
 
 Compiling 1/1 hello.core...
 Writing pom.xml and pom.properties...
@@ -45,7 +45,7 @@ Writing target dir&amp;#40;s&amp;#41;...
 &lt;/code&gt;&lt;/pre&gt;&lt;pre&gt;&lt;code&gt;time boot noop
 
 17.88s user 0.83s system 380% cpu 4.920 total
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;It takes 18s cpu time, 5s real time, just to do nothing!  At least it's using all my 4 cores.&lt;/p&gt;&lt;p&gt;Let's compare this with a hello world java app:&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;java&quot;&gt;// Hello.java
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;It takes 18 sec cpu time, 5 sec real time, just to do nothing!  At least it's using all my 4 cores.&lt;/p&gt;&lt;p&gt;Let's compare this with a hello world java app:&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;java&quot;&gt;// Hello.java
 public class Hello {
     public static void main&amp;#40;String&amp;#91;&amp;#93; args&amp;#41;{
         System.out.println&amp;#40;&amp;quot;Hello world&amp;quot;&amp;#41;;
@@ -59,7 +59,7 @@ time java Hello
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;0.15 secs!  That's amazing!  Now let's compare that with running our Clojure hello world:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;time java -jar target/hello-0.1.0-SNAPSHOT-standalone.jar
 
 2.57s user 0.16s system 196% cpu 1.395 total
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;1.4 secs ... There's a big time difference there from the java hello world, but it's still much faster than running an empty boot task. What causes a bare boot bottup to take so long?&lt;/p&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;1.4 secs ... There's a big time difference there from the java hello world, but it's still much less than running an empty boot task. What causes a bare boot strap to take so long?&lt;/p&gt;
 </description>
 <enclosure>
 

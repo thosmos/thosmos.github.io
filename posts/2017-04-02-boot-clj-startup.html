@@ -66,7 +66,7 @@
 <div>
     
     <p>After having a great conversation with <a href='https://twitter.com/mkaplinskiy'>Mike Kaplisky</a> about how to optimize a Clojure build chain to be as fast as possible (they use <a href='https://buckbuild.com/'>Buck</a> at <a href='https://www.ladderlife.com/'>Ladder</a>), I was inspired to look at <a href='http://boot-clj.com/'>Boot-clj</a>, my preferred build tool, with some fresh and curious eyes.  I'd like to understand better how Boot works under the hood, so I figure a good way to start is to time some various pieces of it in comparison with lein, clojure, and the JVM.</p><p>To start with, let's create a hello world boot-built app:</p><pre><code class="bash">boot -d boot/new new -t app -n hello
-</code></pre><p>By default, after loading deps with an initial run, it takes about 40s to build a jar.</p><pre><code>time boot build
+</code></pre><p>By default, after loading deps with an initial run, it takes about 16 sec to build a jar.</p><pre><code>time boot build
 
 Compiling 1/1 hello.core...
 Writing pom.xml and pom.properties...
@@ -82,7 +82,7 @@ Writing target dir&#40;s&#41;...
 </code></pre><pre><code>time boot noop
 
 17.88s user 0.83s system 380% cpu 4.920 total
-</code></pre><p>It takes 18s cpu time, 5s real time, just to do nothing!  At least it's using all my 4 cores.</p><p>Let's compare this with a hello world java app:</p><pre><code class="java">// Hello.java
+</code></pre><p>It takes 18 sec cpu time, 5 sec real time, just to do nothing!  At least it's using all my 4 cores.</p><p>Let's compare this with a hello world java app:</p><pre><code class="java">// Hello.java
 public class Hello {
     public static void main&#40;String&#91;&#93; args&#41;{
         System.out.println&#40;&quot;Hello world&quot;&#41;;
@@ -96,7 +96,7 @@ time java Hello
 </code></pre><p>0.15 secs!  That's amazing!  Now let's compare that with running our Clojure hello world:</p><pre><code>time java -jar target/hello-0.1.0-SNAPSHOT-standalone.jar
 
 2.57s user 0.16s system 196% cpu 1.395 total
-</code></pre><p>1.4 secs ... There's a big time difference there from the java hello world, but it's still much faster than running an empty boot task. What causes a bare boot bottup to take so long?</p>
+</code></pre><p>1.4 secs ... There's a big time difference there from the java hello world, but it's still much less than running an empty boot task. What causes a bare boot strap to take so long?</p>
 </div>
 
 <div id="post-tags">
