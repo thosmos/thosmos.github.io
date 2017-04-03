@@ -12,7 +12,7 @@ http://code.thosmos.com/
 
 </description>
 <lastBuildDate>
-Mon, 03 Apr 2017 12:29:28 -0700
+Mon, 03 Apr 2017 12:31:05 -0700
 </lastBuildDate>
 <generator>
 clj-rss
@@ -28,7 +28,7 @@ http://code.thosmos.com/posts/2017-04-02-boot-clj-startup.html
 Boot-clj Startup
 </title>
 <description>
-&lt;p&gt;After having a great conversation with &lt;a href='https://twitter.com/mkaplinskiy'&gt;Mike Kaplisky&lt;/a&gt; about how to optimize a Clojure build chain to be as fast as possible (they use &lt;a href='https://buckbuild.com/'&gt;Buck&lt;/a&gt; at &lt;a href='https://www.ladderlife.com/'&gt;Ladder&lt;/a&gt;), I was inspired to look at &lt;a href='http://boot-clj.com/'&gt;Boot-clj&lt;/a&gt;, my preferred build tool, with some fresh and curious eyes.  I'd like to understand better how Boot works under the hood, so I figure a good way to start is to time some various pieces of it in comparison with lein, clojure, and the JVM.&lt;/p&gt;&lt;p&gt;To start with, let's create a hello world boot-built app:&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;bash&quot;&gt;boot -d boot/new new -t app -n myapp
+&lt;p&gt;After having a great conversation with &lt;a href='https://twitter.com/mkaplinskiy'&gt;Mike Kaplisky&lt;/a&gt; about how to optimize a Clojure build chain to be as fast as possible (they use &lt;a href='https://buckbuild.com/'&gt;Buck&lt;/a&gt; at &lt;a href='https://www.ladderlife.com/'&gt;Ladder&lt;/a&gt;), I was inspired to look at &lt;a href='http://boot-clj.com/'&gt;Boot-clj&lt;/a&gt;, my preferred build tool, with some fresh and curious eyes.  I'd like to understand better how Boot works under the hood, so I figure a good way to start is to time some various pieces of it in comparison with lein, clojure, and the JVM.&lt;/p&gt;&lt;p&gt;To start with, let's create a hello world boot-built app:&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;bash&quot;&gt;boot -d boot/new new -t app -n hello
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;By default, after loading deps with an initial run, it takes about 40s to build a jar.&lt;/p&gt;&lt;pre&gt;&lt;code&gt;time boot build
 
 Compiling 1/1 hello.core...
