@@ -12,11 +12,100 @@ http://code.thosmos.com/
 
 </description>
 <lastBuildDate>
-Mon, 03 Apr 2017 12:33:33 -0700
+Fri, 29 Jun 2018 16:27:38 -0700
 </lastBuildDate>
 <generator>
 clj-rss
 </generator>
+<item>
+<guid>
+http://code.thosmos.com/posts/2018-05-06-realworld-vase.html
+</guid>
+<link>
+http://code.thosmos.com/posts/2018-05-06-realworld-vase.html
+</link>
+<title>
+Realworld Clojure in a Vase on a Pedestal
+</title>
+<description>
+&lt;p&gt;&lt;img src=&quot;/img/realworld.png&quot; alt=&quot;image 1&quot; /&gt;&lt;/p&gt;&lt;p&gt;In this exceedingly complex &quot;modern&quot; and ever increasingly fast paced world of internet technological development, it's amazing to see an effort like the &lt;a href='https://realworld.io'&gt;RealWorld Example Apps&lt;/a&gt;, &quot;an Exemplary fullstack Medium.com clone,&quot; offer a path of unity and coherence in the midst of the chaos of so many options. It's a thorough front- and back-end API spec for a non-trivial demo app that many different people have built both front- and back-ends for, including re-frame, Keechma, React, Elm, Vue, Scala, Rails, Node, Django, Go, and many more.&lt;/p&gt;&lt;p&gt;Currently there are a couple of Clojurescript frontends, but no complete Clojure backend.  I've never built anything with Paul de Grandis' &lt;a href='https://github.com/cognitect-labs/vase'&gt;Vase&lt;/a&gt;, but I've admired its data-driven architecture for declaratively building APIs fast. I'm curious how well it would do at building a Real World API backend. There's only one way to find out ...&lt;/p&gt;&lt;p&gt;The First step is to create a new Vase app:&lt;pre&gt;&lt;code&gt;lein new vase realworld-vase
+ &lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;&lt;p&gt;This creates a basic ready-to-run Vase app:&lt;pre&gt;&lt;code&gt;realworld-vase
+├── Capstanfile
+├── Dockerfile
+├── README.md
+├── boot.properties
+├── build.boot
+├── config
+│   └── logback.xml
+├── project.clj
+├── resources
+│   └── realworld-vase&amp;#95;service.edn
+├── src
+│   └── realworld&amp;#95;vase
+│       ├── server.clj
+│       └── service.clj
+└── test
+    └── realworld&amp;#95;vase
+        ├── service&amp;#95;test.clj
+        └── test&amp;#95;helper.clj
+
+6 directories, 12 files
+ &lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;&lt;p&gt;Most of the magic happens in the EDN config file: &lt;code&gt;resources/realworld-vase&amp;#95;service.edn&lt;/code&gt;&lt;/p&gt;&lt;p&gt;By default, the app has a few example API endpoints which we can see after running the app:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;lein run
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;If we now browse to &lt;a href='http://localhost:8080/api/realworld-vase/v1/db'&gt;http://localhost:8080/api/realworld-vase/v1/db&lt;/a&gt; we'll see a list of all of the installed attributes in the sample Datomic database.&lt;/p&gt;&lt;p&gt;Our goal is to define a set of attributes to cover all of the necessary fields in the &lt;a href='https://github.com/gothinkster/realworld/tree/master/api'&gt;RealWorld API description&lt;/a&gt;.&lt;/p&gt;&lt;p&gt;The first entity type is the User:&lt;pre&gt;&lt;code class=&quot;json&quot;&gt;{
+  &amp;quot;user&amp;quot;: {
+    &amp;quot;email&amp;quot;: &amp;quot;jake@jake.jake&amp;quot;,
+    &amp;quot;token&amp;quot;: &amp;quot;jwt.token.here&amp;quot;,
+    &amp;quot;username&amp;quot;: &amp;quot;jake&amp;quot;,
+    &amp;quot;bio&amp;quot;: &amp;quot;I work at statefarm&amp;quot;,
+    &amp;quot;image&amp;quot;: null
+  }
+}
+ &lt;/code&gt;&lt;/pre&gt; We can define this in the &lt;code&gt;resources/realworld-vase&amp;#95;service.edn&lt;/code&gt; file by replacing the example user schema with the following:&lt;pre&gt;&lt;code class=&quot;edn&quot;&gt;:realworld-vase/user-schema
+{:vase.norm/requires &amp;#91;:realworld-vase/base-schema&amp;#93;
+ :vase.norm/txes &amp;#91;#vase/schema-tx
+   &amp;#91;&amp;#91;:user/username :one :string :identity &amp;quot;A user's unique identifier&amp;quot;&amp;#93;
+    &amp;#91;:user/email :one :string :unique &amp;quot;A user's email&amp;quot;&amp;#93;
+    &amp;#91;:user/bio :one :string :fulltext &amp;quot;A short blurb about a user&amp;quot;&amp;#93;
+    &amp;#91;:user/company :one :ref &amp;quot;A user's employer&amp;quot;&amp;#93;
+    &amp;#91;:user/image :one :uri &amp;quot;URL of a user's photo&amp;quot;&amp;#93;
+    &amp;#91;:user/token :one :string :index &amp;quot;A user's auth token&amp;quot;&amp;#93;&amp;#93;&amp;#93;}
+ &lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;&lt;p&gt;Vase idempotently applies DB schema using conformity, so we'll need to restart the server in order to see our new attributes.&lt;pre&gt;&lt;code&gt;lein run
+ &lt;/code&gt;&lt;/pre&gt; Now we should see our new attributes in the &lt;code&gt;db&lt;/code&gt; endpoint &lt;a href='http://localhost:8080/api/realworld-vase/v1/db'&gt;http://localhost:8080/api/realworld-vase/v1/db&lt;/a&gt;. (Search for &lt;code&gt;user/username&lt;/code&gt; and &lt;code&gt;user/email&lt;/code&gt; for example.)&lt;/p&gt;&lt;p&gt;Further down in our &lt;code&gt;realworld-vase&amp;#95;service.edn&lt;/code&gt; file, we can change the definition for the &lt;code&gt;/users&lt;/code&gt; endpoint to the following:&lt;pre&gt;&lt;code class=&quot;edn&quot;&gt; &amp;quot;/users/:username&amp;quot; {:get #vase/query
+    {:name :realworld-vase.v1/user-id-page
+     :params &amp;#91;username&amp;#93;
+     :edn-coerce &amp;#91;username&amp;#93;
+     :query &amp;#91;:find ?e
+             :in $ ?username
+             :where
+             &amp;#91;?e :user/username ?username&amp;#93;&amp;#93;}}
+
+ &amp;quot;/user&amp;quot; {:get #vase/query {:name :realworld-vase.v1/user-page
+                            ;; All params are required to perform the query
+                            :params &amp;#91;email&amp;#93;
+                            :query &amp;#91;:find ?e
+                                    :in $ ?email
+                                    :where
+                                    &amp;#91;?e :user/email ?email&amp;#93;&amp;#93;}
+          :post #vase/transact {:name :realworld-vase.v1/user-create
+                                ;; `:properties` are pulled from the parameters
+                                :properties &amp;#91;:db/id
+                                             :user/username
+                                             :user/email
+                                             :user/bio&amp;#93;}
+          :delete #vase/transact {:name :realworld-vase.v1/user-delete
+                                  :db-op :vase/retract-entity
+                                  ;; :vase/retract-entity requires :db/id to be supplied
+                                  :properties &amp;#91;:db/id&amp;#93;}}
+ &lt;/code&gt;&lt;/pre&gt; We should now be able to transact and query some users via the API.&lt;pre&gt;&lt;code&gt;curl -H &amp;quot;Accept: application/json&amp;quot; -X POST -d '{&amp;quot;payload&amp;quot;: &amp;#91;{&amp;quot;user/username&amp;quot;:&amp;quot;thosmos&amp;quot;,&amp;quot;user/email&amp;quot;:&amp;quot;thos37@gmail.com&amp;quot;,&amp;quot;user/bio&amp;quot;:&amp;quot;coding the thosmos&amp;quot;}&amp;#93;}' http://localhost:8080/api/realworld-vase/v1/user
+ &lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;&lt;p&gt;To be continued ...&lt;/p&gt;
+</description>
+<enclosure>
+
+</enclosure>
+<pubDate>
+Sun, 06 May 2018 00:00:00 -0700
+</pubDate>
+</item>
 <item>
 <guid>
 http://code.thosmos.com/posts/2017-04-02-boot-clj-startup.html
@@ -28,7 +117,7 @@ http://code.thosmos.com/posts/2017-04-02-boot-clj-startup.html
 Boot-clj Startup
 </title>
 <description>
-&lt;p&gt;After having a great conversation with &lt;a href='https://twitter.com/mkaplinskiy'&gt;Mike Kaplisky&lt;/a&gt; about how to optimize a Clojure build chain to be as fast as possible (they use &lt;a href='https://buckbuild.com/'&gt;Buck&lt;/a&gt; at &lt;a href='https://www.ladderlife.com/'&gt;Ladder&lt;/a&gt;), I was inspired to look at &lt;a href='http://boot-clj.com/'&gt;Boot-clj&lt;/a&gt;, my preferred build tool, with some fresh and curious eyes.  I'd like to understand better how Boot works under the hood, so I figure a good way to start is to time some various pieces of it in comparison with lein, clojure, and the JVM.&lt;/p&gt;&lt;p&gt;To start with, let's create a hello world boot-built app:&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;bash&quot;&gt;boot -d boot/new new -t app -n hello
+&lt;p&gt;After having a great conversation with &lt;a href='https://twitter.com/mkaplinskiy'&gt;Mike Kaplisky&lt;/a&gt; at ClojureWest 2017 about how to optimize a Clojure build chain to be as fast as possible (they use &lt;a href='https://buckbuild.com/'&gt;Buck&lt;/a&gt; at &lt;a href='https://www.ladderlife.com/'&gt;Ladder&lt;/a&gt;), I was inspired to look at &lt;a href='http://boot-clj.com/'&gt;Boot-clj&lt;/a&gt;, my preferred build tool, with some fresh and curious eyes.  I'd like to understand better how Boot works under the hood, so I figure a good way to start is to time some various pieces of it in comparison with lein, clojure, and the JVM.&lt;/p&gt;&lt;p&gt;To start with, let's create a hello world boot-built app:&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;bash&quot;&gt;boot -d boot/new new -t app -n hello
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;By default, after loading deps with an initial run, it takes about 16 sec to build a jar.&lt;/p&gt;&lt;pre&gt;&lt;code&gt;time boot build
 
 Compiling 1/1 hello.core...
