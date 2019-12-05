@@ -12,7 +12,7 @@ http://code.thosmos.com/
 
 </description>
 <lastBuildDate>
-Thu, 05 Dec 2019 10:47:38 -0800
+Thu, 05 Dec 2019 11:11:58 -0800
 </lastBuildDate>
 <generator>
 clj-rss
@@ -78,6 +78,7 @@ Spec-Driven UI
                   :attr/type        :ref,
                   :attr/ref         {:entity/ns :entity.ns/attr}
                   :attr/cardinality :many,
+                  :attr/component  true,
                   :attr/doc         &amp;quot;attribute specs for this entity&amp;quot;}&amp;#93;}
  {:entity/ns    :entity.ns/attr,
   :entity/name  &amp;quot;Attribute&amp;quot;
