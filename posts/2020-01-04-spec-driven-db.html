@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
     <meta charset="utf-8"/>
-    <title>Coding the τhosmos: Posts Tagged &quot;boot-clj&quot;</title>
+    <title>Coding the τhosmos: Spec-Driven DB</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href='//fonts.googleapis.com/css?family=Alegreya:400italic,700italic,400,700' rel='stylesheet'
           type='text/css'>
@@ -63,17 +63,48 @@
         <div class="col-lg-9">
             <div id="content">
                 
-<div id="posts-by-tag">
-    <div id="page-header">
-        <h2>Posts Tagged &quot;boot-clj&quot;</h2>
+<div id="post">
+    <div class="post-header">
+    <div id="post-meta" class="row">
+        <div class="col-lg-6">January 4, 2020</div>
+        
     </div>
-    <ul>
+    <h2>Spec-Driven DB</h2>
+</div>
+<div>
     
-        <li>
-            <a href="/posts/2017-04-02-boot-clj-startup.html">Boot-clj Startup</a>
-        </li>
+     <p>Someone asked on <a href='https://ask.clojure.org'>ask.clojure.org</a> about modeling SQL data in Clojure, so <a href='https://ask.clojure.org/index.php/8484/how-do-you-approach-data-database-modeling-in-clojure?show=8988#a8988'>I answered the following</a>:</p><p>I recently moved an app from a 13 year old java/hibernate/MySQL design to Clojure/Datomic</p><p>I wrote a library that reads the MySQL table schema, creates an abstract table spec, then uses that spec to create the Datomic schema and migrates all the data over to Datomic. You're welcome to check it out for inspiration (I attempted to write it somewhat generally, but it's fairly tightly focused on my use case) <a href='https://github.com/thosmos/mysql-to-datomic'>thosmos/mysql-to-datomic</a></p><p>The main point however is that I created my own abstract data spec to describe the tables, columns, and foreign keys, such that I had everything I needed to not only generate the Datomic schema, but also later auto-generated GraphQL and EQL APIs and front-end CRUD data entry forms with linked subforms and data validations, all from this abstract spec. I've attempted to pull the essence of this model-defining spec into a minimal library here: <a href='https://github.com/thosmos/domain-spec'>thosmos/domain-spec</a></p><p>It again tightly serves my use case, but perhaps it will inspire you to realize that in Clojure you can do your own thing quite easily and powerfully without over-relying on libraries and dependencies.</p>
+</div>
+
+<div id="post-tags">
+    <b>Tags: </b>
     
-    </ul>
+    <a href="/tags/clojure.html">clojure</a>
+    
+    <a href="/tags/programming.html">programming</a>
+    
+</div>
+
+
+    <div id="prev-next">
+        
+        
+        <a class="right" href="/posts/2019-12-04-spec-driven-ui.html">Spec-Driven UI &raquo;</a>
+        
+    </div>
+
+    
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//codingthethosmos.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    
+
+
 </div>
 
             </div>

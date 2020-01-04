@@ -66,156 +66,14 @@
 <div id="post">
     <div class="post-header">
     <div id="post-meta" class="row">
-        <div class="col-lg-6">December 4, 2019</div>
+        <div class="col-lg-6">January 4, 2020</div>
         
     </div>
-    <h2>Spec-Driven UI</h2>
+    <h2>Spec-Driven DB</h2>
 </div>
 <div>
     
-    <p>Background: I'm embarking on a long overdue revamp of an old environmental data management system I made 12 years ago that's used by local watershed science organizations to manage their science data.  Ever since I built the first version, I've been thinking about how to improve it, but life and other projects have kept me preoccupied, and it's mainly a volunteer effort.<br /></p><p>It has a normalized MySQL DB with a <a href='https://en.wikipedia.org/wiki/Apache_Flex'>Flex</a> frontend that mutates a tree of relational data objects created by <a href='https://hibernate.org/'>Hibernate</a> and sent across the wire via <a href='https://github.com/graniteds/graniteds'>GraniteDS</a>.<br /></p><p>A few years ago when I saw <a href='https://youtu.be/BNkYYYyfF48'>Paul deGrandis' Data-Driven talk</a> I realized Clojure would be a good fit for a rewrite.  Even more years ago, I considered using XML, XML Schema, and XForms.  With XForms 2.0 recently released, I can't say that would be a bad way to go... Declarative UI for the win, but "XML is messy Lisp!" and why not just use the most useful real modern Lisp -> Clojure?</p><p>The intention is to migrate the database to <a href='https://www.datomic.com/'>Datomic</a> and keep the same basic normalized table schema with a <a href='https://en.wikipedia.org/wiki/Single-page_application'>SPA web frontend</a> that reads and transacts a tree of relational data across the wire.  <a href='https://clojure.org/'>Clojure</a>(<a href='https://clojurescript.org/'>script</a>), Datomic, <a href='https://github.com/edn-format/edn'>EDN</a>, and <a href='https://edn-query-language.org/'>EQL</a> are perfect for this.  Datomic's pull query and tree-like transaction format makes it easy to move a whole tree of relational entities both ways across the wire relatively painlessly.  MySQL + Hibernate + GraniteDS were amazing for this 12 years ago, but I like the Datomic + EQL approach more now, mainly because it's a more pure data + code approach.  Clojure is great because it's the most simple and stable language I'm aware of, the same language can be used for both client and server, and EDN/<a href='https://github.com/cognitect/transit-format'>Transit</a> is a desirable data format for the wire when talking to a browser.</p><p>Progress: I wrote a library that migrated the schema and data over to Datomic from MySQL (<a href='https://github.com/thosmos/mysql-to-datomic'>thosmos/mysql-to-datomic</a>).  This maps tables to namespaces, and columns to attributes in that namespace.  One thing I needed was a higher level notion of foreign-keys from one entity type to another, which Datomic doesn't have, as well as other SQLisms like string length for VarChar columns, etc.  So I created a simple domain spec that describes this (<a href='https://github.com/thosmos/domain-spec'>thosmos/domain-spec</a>), which is then used for generating the Datomic schema, <a href='https://github.com/walmartlabs/lacinia'>Lacinia</a> GraphQL schema, and can contain DB- or GraphQL-specific things, etc.  I'm just using Datomic, so I haven't bothered with other DBs. </p><p>This GraphQL backend is already live on our 1st draft production frontend at <a href='https://riverdb.org'>RiverDB.org</a> and our <a href='http://riverdb.surge.sh/'>dev frontend</a>.  The specs are used to generate the GraphQL endpoints for all of the tables using only one resolver.</p><p>Here's an example of one domain entity from the domain spec:</p><pre><code class="edn">{:db/id &quot;toxtest&quot;,
- :entity/name &quot;toxtest&quot;,
- :entity/ns :entity.ns/toxtest,
- :entity/attrs
-   &#91;{:attr/name &quot;ComplianceCode&quot;,
-     :attr/key :toxtest/ComplianceCode,
-     :attr/position 8,
-     :attr/cardinality :one,
-     :attr/type :ref,
-     :attr/ref {:entity/ns :entity.ns/compliancelevellookup},
-     :attr/strlen 5}
-    {:attr/name &quot;LabSampleID&quot;,
-     :attr/key :toxtest/LabSampleID,
-     :attr/position 4,
-     :attr/cardinality :one,
-     :attr/type :string,
-     :attr/strlen 20}&#93;}
-</code></pre><p>Goals: </p><p>1) Generate a basic CRUD UI from the domain specs such that the domain data can be easily edited.  Generating the UI from the spec enables using the same UI app for multiple different schema shapes, or to more easily migrate the schema without having to touch the UI app.  In other words: a spec-driven UI.<br /></p><p>I currently have a dev <a href='https://marmelab.com/react-admin/'>marmelab/react-admin</a> CRUD UI running that's generated from the spec and that provides a good default editing experience for each individual "table" or entity type.  The next step is to create some custom UIs that combine a graph of related entity types into a single form.  This is where I'm wishing I could be doing this in CLJS instead.</p><p>1.5) It would be possible to have some simple schema migration tooling that would provide functions for doing the most common migrations (add an attribute, add an entity type, alias a key, add but not change a join reference, etc) and then would change both the spec and the live DB schema.</p><p>2) Because the spec is just data and is itself defined using its own spec format, it's possible to use the same spec-driven CRUD UI to edit it using the same means as the domain data editor.   This will be a "schema editor" that enables the user to: add an attribute to an entity type; change an attribute's validation function; add a new entity type; add a new entity reference attribute to an existing entity type, etc.  These types of changes result in schema migrations under the hood, using the same tooling as described in (1.5) above.  This approach enables adding new fields, and aliasing existing fields, but not renaming or removing fields, since this data might be referenced from elsewhere in the distributed system that is the internet.  Also, since we're dealing with historic environmental data, we want to never lose anything, but only track changes and modifications.<br /></p><p> This self-editing of the schema is accomplished by using the same spec-driven UI CRUD editor because the schema specs are self-defined using the same spec attrs as domain specs (very meta):</p><pre><code class="edn">&#91;{:entity/ns    :entity.ns/entity,
-  :entity/name  &quot;Entity&quot;
-  :entity/pks   &#91;:entity/ns&#93;
-  :entity/doc   &quot;The entity spec for the entity spec -&gt; so meta&quot;
-  :entity/attrs &#91;{:attr/key         :entity/ns,
-                  :attr/type        :keyword,
-                  :attr/cardinality :one,
-                  :attr/identity   true,
-                  :attr/doc         &quot;unique keyword for this spec like -&gt; :entity.ns/sitevisit&quot;}
-                 {:attr/key         :entity/name,
-                  :attr/type        :string,
-                  :attr/cardinality :one,
-                  :attr/doc         &quot;A display name&quot;}
-                 {:attr/key         :entity/doc,
-                  :attr/type        :string,
-                  :attr/cardinality :one,
-                  :attr/doc         &quot;documentation about this entity&quot;}
-                 {:attr/key         :entity/prnFn,
-                  :attr/type        :string,
-                  :attr/cardinality :one,
-                  :attr/doc         &quot;a function with the entity as its arg for printing this entity&quot;}
-                 {:attr/key         :entity/summaryKeys,
-                  :attr/type        :keyword,
-                  :attr/cardinality :many,
-                  :attr/doc         &quot;a subset of this entity's attrs to display in a summary list&quot;}
-                 {:attr/key         :entity/pks,
-                  :attr/type        :keyword,
-                  :attr/cardinality :many,
-                  :attr/doc         &quot;list of attribute keywords that collectively act as a unique constraint for this entity&quot;}
-                 {:attr/key         :entity/attrs,
-                  :attr/type        :ref,
-                  :attr/ref         {:entity/ns :entity.ns/attr}
-                  :attr/cardinality :many,
-                  :attr/component  true,
-                  :attr/doc         &quot;attribute specs for this entity&quot;}&#93;}
- {:entity/ns    :entity.ns/attr,
-  :entity/name  &quot;Attribute&quot;
-  :entity/pks   &#91;:attr/key&#93;
-  :entity/doc   &quot;The entity spec for the attribute spec -&gt; very meta&quot;
-  :entity/attrs &#91;{:attr/key         :attr/key,
-                  :attr/type        :keyword,
-                  :attr/cardinality :one,
-                  :attr/identity   true,
-                  :attr/doc         &quot;the datomic attribute keyword name -&gt; :&lt;entity-ns&gt;/&lt;attr-key&gt; -&gt; :sitevisit/SiteVisitDate&quot;}
-                 {:attr/key         :attr/type,
-                  :attr/type        :keyword,
-                  :attr/cardinality :one,
-                  :attr/doc         &quot;#{:keyword :string :boolean :long :bigint :float :double :bigdec :ref :instant :uuid :uri :bytes}&quot;}
-                 {:attr/key         :attr/cardinality,
-                  :attr/type        :keyword,
-                  :attr/cardinality :one,
-                  :attr/doc         &quot;#{:one :many}&quot;}
-                 {:attr/key         :attr/name,
-                  :attr/type        :string,
-                  :attr/cardinality :one,
-                  :attr/doc         &quot;a display name&quot;}
-                 {:attr/key         :attr/ref,
-                  :attr/type        :ref,
-                  :attr/cardinality :one,
-                  :attr/doc         &quot;a DB ref to the entity spec for the target type of this ref attribute, i.e. Foreign Key&quot;}
-                 {:attr/key         :attr/identity,
-                  :attr/type        :boolean,
-                  :attr/cardinality :one,
-                  :attr/doc         &quot;is this an identity attribute?&quot;}
-                 {:attr/key         :attr/unique,
-                  :attr/type        :boolean,
-                  :attr/cardinality :one,
-                  :attr/doc         &quot;is this a unique attribute?&quot;}
-                 {:attr/key         :attr/primary,
-                  :attr/type        :boolean,
-                  :attr/cardinality :one,
-                  :attr/doc         &quot;is this a primary key?&quot;}
-                 {:attr/key         :attr/required,
-                  :attr/type        :boolean,
-                  :attr/cardinality :one,
-                  :attr/doc         &quot;is this attribute required?&quot;}
-                 {:attr/key         :attr/component,
-                  :attr/type        :boolean,
-                  :attr/cardinality :one,
-                  :attr/doc         &quot;is this a component attribute?&quot;}
-                 {:attr/key         :attr/noHistory,
-                  :attr/type        :boolean,
-                  :attr/cardinality :one,
-                  :attr/doc         &quot;skip keeping history in datomic?&quot;}
-                 {:attr/key         :attr/fulltext,
-                  :attr/type        :boolean,
-                  :attr/cardinality :one,
-                  :attr/doc         &quot;index full text?&quot;}
-                 {:attr/key         :attr/derived,
-                  :attr/type        :boolean,
-                  :attr/cardinality :one,
-                  :attr/doc         &quot;is this attribute a derived value?&quot;}
-                 {:attr/key         :attr/deriveFn,
-                  :attr/type        :string,
-                  :attr/cardinality :one,
-                  :attr/doc         &quot;fn code for deriving this attr value&quot;}
-                 {:attr/key         :attr/deriveAttrs,
-                  :attr/type        :keyword,
-                  :attr/cardinality :many,
-                  :attr/doc         &quot;attrs of the parent entity that are used to derive this attr value&quot;}
-                 {:attr/key         :attr/doc,
-                  :attr/type        :string,
-                  :attr/cardinality :one,
-                  :attr/doc         &quot;this attribute's doc string&quot;}
-                 {:attr/key         :attr/decimals,
-                  :attr/type        :long,
-                  :attr/cardinality :one,
-                  :attr/doc         &quot;number of decimals in this floating point value&quot;}
-                 {:attr/key         :attr/strlen,
-                  :attr/type        :long,
-                  :attr/cardinality :one,
-                  :attr/doc         &quot;number of chars in this string value&quot;}
-                 {:attr/key         :attr/position,
-                  :attr/type        :long,
-                  :attr/cardinality :one,
-                  :attr/doc         &quot;ordinal position - optional for visual ordering&quot;}
-                 {:attr/key         :attr/nextAutoVal,
-                  :attr/type        :long,
-                  :attr/cardinality :one,
-                  :attr/noHistory   true,
-                  :attr/doc         &quot;next auto-increment value. optional&quot;}
-                 {:attr/key         :attr/gql,
-                  :attr/type        :string,
-                  :attr/cardinality :one,
-                  :attr/doc         &quot;A GraphQL-friendly attribute name&quot;}&#93;}&#93;
-</code></pre><p>3) An obvious further meta meta option would be to enable editing the spec's specs!  This would for example enable adding a new field to the Attr spec, which would cause it to show up in the schema editor for all schema attributes.  This is probably too meta to even mention, but it's possible using the same spec-driven UI!</p>
+     <p>Someone asked on <a href='https://ask.clojure.org'>ask.clojure.org</a> about modeling SQL data in Clojure, so <a href='https://ask.clojure.org/index.php/8484/how-do-you-approach-data-database-modeling-in-clojure?show=8988#a8988'>I answered the following</a>:</p><p>I recently moved an app from a 13 year old java/hibernate/MySQL design to Clojure/Datomic</p><p>I wrote a library that reads the MySQL table schema, creates an abstract table spec, then uses that spec to create the Datomic schema and migrates all the data over to Datomic. You're welcome to check it out for inspiration (I attempted to write it somewhat generally, but it's fairly tightly focused on my use case) <a href='https://github.com/thosmos/mysql-to-datomic'>thosmos/mysql-to-datomic</a></p><p>The main point however is that I created my own abstract data spec to describe the tables, columns, and foreign keys, such that I had everything I needed to not only generate the Datomic schema, but also later auto-generated GraphQL and EQL APIs and front-end CRUD data entry forms with linked subforms and data validations, all from this abstract spec. I've attempted to pull the essence of this model-defining spec into a minimal library here: <a href='https://github.com/thosmos/domain-spec'>thosmos/domain-spec</a></p><p>It again tightly serves my use case, but perhaps it will inspire you to realize that in Clojure you can do your own thing quite easily and powerfully without over-relying on libraries and dependencies.</p>
 </div>
 
 <div id="post-tags">
@@ -230,14 +88,14 @@
 
     
     <div id="comments">
-        <a href="/posts/2019-12-04-spec-driven-ui.html#disqus_thread">View Comments</a>
+        <a href="/posts/2020-01-04-spec-driven-db.html#disqus_thread">View Comments</a>
     </div>
     
 
     <div id="prev-next">
         
         
-        <a class="right" href="/posts/2018-05-06-realworld-vase.html">Realworld Clojure in a Vase on a Pedestal &raquo;</a>
+        <a class="right" href="/posts/2019-12-04-spec-driven-ui.html">Spec-Driven UI &raquo;</a>
         
     </div>
 </div>
@@ -284,11 +142,11 @@
                     <h3>Recent Posts</h3>
                     <ul>
                         
+                        <li><a href="/posts/2020-01-04-spec-driven-db.html">Spec-Driven DB</a></li>
+                        
                         <li><a href="/posts/2019-12-04-spec-driven-ui.html">Spec-Driven UI</a></li>
                         
                         <li><a href="/posts/2018-05-06-realworld-vase.html">Realworld Clojure in a Vase on a Pedestal</a></li>
-                        
-                        <li><a href="/posts/2017-04-02-boot-clj-startup.html">Boot-clj Startup</a></li>
                         
                     </ul>
                 </div>

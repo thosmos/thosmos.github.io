@@ -12,11 +12,31 @@ http://code.thosmos.com/
 
 </description>
 <lastBuildDate>
-Thu, 05 Dec 2019 12:03:13 -0800
+Sat, 04 Jan 2020 02:04:14 -0800
 </lastBuildDate>
 <generator>
 clj-rss
 </generator>
+<item>
+<guid>
+http://code.thosmos.com/posts/2020-01-04-spec-driven-db.html
+</guid>
+<link>
+http://code.thosmos.com/posts/2020-01-04-spec-driven-db.html
+</link>
+<title>
+Spec-Driven DB
+</title>
+<description>
+ &lt;p&gt;Someone asked on &lt;a href='https://ask.clojure.org'&gt;ask.clojure.org&lt;/a&gt; about modeling SQL data in Clojure, so &lt;a href='https://ask.clojure.org/index.php/8484/how-do-you-approach-data-database-modeling-in-clojure?show=8988#a8988'&gt;I answered the following&lt;/a&gt;:&lt;/p&gt;&lt;p&gt;I recently moved an app from a 13 year old java/hibernate/MySQL design to Clojure/Datomic&lt;/p&gt;&lt;p&gt;I wrote a library that reads the MySQL table schema, creates an abstract table spec, then uses that spec to create the Datomic schema and migrates all the data over to Datomic. You're welcome to check it out for inspiration (I attempted to write it somewhat generally, but it's fairly tightly focused on my use case) &lt;a href='https://github.com/thosmos/mysql-to-datomic'&gt;thosmos/mysql-to-datomic&lt;/a&gt;&lt;/p&gt;&lt;p&gt;The main point however is that I created my own abstract data spec to describe the tables, columns, and foreign keys, such that I had everything I needed to not only generate the Datomic schema, but also later auto-generated GraphQL and EQL APIs and front-end CRUD data entry forms with linked subforms and data validations, all from this abstract spec. I've attempted to pull the essence of this model-defining spec into a minimal library here: &lt;a href='https://github.com/thosmos/domain-spec'&gt;thosmos/domain-spec&lt;/a&gt;&lt;/p&gt;&lt;p&gt;It again tightly serves my use case, but perhaps it will inspire you to realize that in Clojure you can do your own thing quite easily and powerfully without over-relying on libraries and dependencies.&lt;/p&gt;
+</description>
+<enclosure>
+
+</enclosure>
+<pubDate>
+Sat, 04 Jan 2020 00:00:00 -0800
+</pubDate>
+</item>
 <item>
 <guid>
 http://code.thosmos.com/posts/2019-12-04-spec-driven-ui.html
