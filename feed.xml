@@ -12,11 +12,136 @@ http://code.thosmos.com/
 
 </description>
 <lastBuildDate>
-Sat, 04 Jan 2020 02:04:14 -0800
+Tue, 14 Jan 2020 22:08:36 -0800
 </lastBuildDate>
 <generator>
 clj-rss
 </generator>
+<item>
+<guid>
+http://code.thosmos.com/posts/2020-01-14-should-threading-macros-handle-lambdas.html
+</guid>
+<link>
+http://code.thosmos.com/posts/2020-01-14-should-threading-macros-handle-lambdas.html
+</link>
+<title>
+Should Threading Macros Handle Lambdas?
+</title>
+<description>
+&lt;p&gt;I recently thought I ran into a bug in &lt;code&gt;clojure.spec&lt;/code&gt; because it threw an exception when I put a lambda like &lt;code&gt;&amp;#40;fn &amp;#91;x&amp;#93; x&amp;#41;&lt;/code&gt; or &lt;code&gt;#&amp;#40;identity %&amp;#41;&lt;/code&gt; into the &lt;code&gt;-&amp;gt;&lt;/code&gt; threading macro without wrapping it first in an extra parens like &lt;code&gt;&amp;#40;&amp;#40;fn &amp;#91;x&amp;#93; x&amp;#41;&amp;#41;&lt;/code&gt;.  This is the most common repeated &quot;mistake&quot; I've made in Clojure over the years, and I've heard from others that it's a common misconception about the threading macros.  This &quot;mistake&quot; in my case is based on my assumption that the lambda is a fundamental &quot;thing&quot; or value in the language.  But, in fact, Clojure is just data, mostly macros, and each macro handles its input data in different ways.&lt;/p&gt;&lt;p&gt;The &lt;code&gt;-&amp;gt;&lt;/code&gt; threading macro treats a lambda as a list instead of as a fundamental &quot;function value.&quot;  When one does &lt;code&gt;&amp;#40;-&amp;gt; :hmm &amp;#40;fn &amp;#91;x&amp;#93; x&amp;#41;&amp;#41;&lt;/code&gt; it is expanded like: &lt;code&gt;&amp;#40;fn :hmm &amp;#91;x&amp;#93; x&amp;#41;&lt;/code&gt; which obviously is not what is intended.   &lt;em&gt;However&lt;/em&gt;, it does have a special convenience case for a non-list thing like a symbol, keyword, etc, which it assumes is something that can behave as a function with one argument, and wraps it in parens before threading.  This special case adds value because it interprets the &lt;em&gt;intention&lt;/em&gt; of the user and avoids forcing them to add parens when they're unnecessary. &lt;/p&gt;&lt;p&gt;I assert that the basic lambda forms &lt;code&gt;&amp;#40;fn&amp;#41;&lt;/code&gt; and &lt;code&gt;#&amp;#40;&amp;#41;&lt;/code&gt; should and easily can be handled similarly to a symbol, by interpreting the &lt;em&gt;intention&lt;/em&gt; of the user.  The value from doing so would make the threading macros simpler and more intuitive to use, would remove an unnecessary exception that affects numerous users,  and would advance the language towards treating the lambda forms as core &quot;values.&quot;  This last point is a philosophical one, but important in my opinion for making the language &quot;just work&quot; the way a new or non-expert user expects when getting stuff done.&lt;/p&gt;&lt;p&gt;The existing special case of wrapping a non-list form already demonstrates the value of providing some interpretation of the &lt;em&gt;intention&lt;/em&gt; of the user, but there now exists an inconsistency between this special case, and the absence of it for two of the most common forms of arguably one of the most foundational &quot;values&quot; in the language, the function itself.&lt;/p&gt;&lt;p&gt;Have you been bitten by this &quot;mistake&quot;?&lt;/p&gt;&lt;p&gt;If you'd like to try it side by side with the existing &lt;code&gt;-&amp;gt;&lt;/code&gt; macro, here's a version called &lt;code&gt;t-&amp;gt;&lt;/code&gt;:&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;clojure&quot;&gt;&amp;#40;defmacro t-&amp;gt;
+  &amp;quot;Threads the expr through the forms. Inserts x as the
+  second item in the first form, making a list of it if it is a lambda or not a
+  list already. If there are more forms, inserts the first form as the
+  second item in second form, etc.&amp;quot;
+  {:added &amp;quot;1.0&amp;quot;}
+  &amp;#91;x &amp;amp; forms&amp;#93;
+  &amp;#40;loop &amp;#91;x x, forms forms&amp;#93;
+    &amp;#40;if forms
+      &amp;#40;let &amp;#91;form &amp;#40;first forms&amp;#41;
+            threaded &amp;#40;if &amp;#40;and &amp;#40;seq? form&amp;#41; &amp;#40;not &amp;#40;#{'fn 'fn&amp;#42;} &amp;#40;first form&amp;#41;&amp;#41;&amp;#41;&amp;#41;
+                       &amp;#40;with-meta `&amp;#40;&amp;#126;&amp;#40;first form&amp;#41; &amp;#126;x &amp;#126;@&amp;#40;next form&amp;#41;&amp;#41; &amp;#40;meta form&amp;#41;&amp;#41;
+                       &amp;#40;list form x&amp;#41;&amp;#41;&amp;#93;
+        &amp;#40;recur threaded &amp;#40;next forms&amp;#41;&amp;#41;&amp;#41;
+      x&amp;#41;&amp;#41;&amp;#41;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;I've prepared a patch for &lt;code&gt;-&amp;gt;&lt;/code&gt; and &lt;code&gt;-&amp;gt;&amp;gt;&lt;/code&gt; that handles this use case and has no breaking impact that I can conceive of, keeping the existing behavior, while adding the new.  It passes all of the core Clojure tests, but I have not yet tested it on outside code beyond my own.  That would obviously be necessary before it could be considered a possible change in core.&lt;br /&gt;   &lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;diff&quot;&gt;From 686831062a574486413022af31e8c7a07b78cd24 Mon Sep 17 00:00:00 2001
+From: Thomas Spellman &amp;lt;thos37@gmail.com&amp;gt;
+Date: Mon, 13 Jan 2020 20:39:45 -0800
+Subject: &amp;#91;PATCH&amp;#93; thread macros
+
+---
+ src/clj/clojure/core.clj             | 12 ++++++------
+ test/clojure/test&amp;#95;clojure/macros.clj | 12 ++++++++++++
+ 2 files changed, 18 insertions&amp;#40;+&amp;#41;, 6 deletions&amp;#40;-&amp;#41;
+
+diff --git a/src/clj/clojure/core.clj b/src/clj/clojure/core.clj
+index 8e98e072..fe43289b 100644
+--- a/src/clj/clojure/core.clj
++++ b/src/clj/clojure/core.clj
+@@ -1670,42 +1670,42 @@
+   &amp;#40;. &amp;#40;. System &amp;#40;getProperties&amp;#41;&amp;#41; &amp;#40;get \&amp;quot;os.name\&amp;quot;&amp;#41;&amp;#41;
+ 
+   but is easier to write, read, and understand.&amp;quot;
+   {:added &amp;quot;1.0&amp;quot;}
+   &amp;#40;&amp;#91;x form&amp;#93; `&amp;#40;. &amp;#126;x &amp;#126;form&amp;#41;&amp;#41;
+   &amp;#40;&amp;#91;x form &amp;amp; more&amp;#93; `&amp;#40;.. &amp;#40;. &amp;#126;x &amp;#126;form&amp;#41; &amp;#126;@more&amp;#41;&amp;#41;&amp;#41;
+ 
+ &amp;#40;defmacro -&amp;gt;
+-  &amp;quot;Threads the expr through the forms. Inserts x as the
+-  second item in the first form, making a list of it if it is not a
++  &amp;quot;Threads the expr through the forms. Inserts x as the second item
++  in the first form, making a list of it if it is a lambda or not a
+   list already. If there are more forms, inserts the first form as the
+   second item in second form, etc.&amp;quot;
+   {:added &amp;quot;1.0&amp;quot;}
+   &amp;#91;x &amp;amp; forms&amp;#93;
+   &amp;#40;loop &amp;#91;x x, forms forms&amp;#93;
+     &amp;#40;if forms
+       &amp;#40;let &amp;#91;form &amp;#40;first forms&amp;#41;
+-            threaded &amp;#40;if &amp;#40;seq? form&amp;#41;
++            threaded &amp;#40;if &amp;#40;and &amp;#40;seq? form&amp;#41; &amp;#40;not &amp;#40;#{'fn 'fn&amp;#42;} &amp;#40;first form&amp;#41;&amp;#41;&amp;#41;&amp;#41;
+                        &amp;#40;with-meta `&amp;#40;&amp;#126;&amp;#40;first form&amp;#41; &amp;#126;x &amp;#126;@&amp;#40;next form&amp;#41;&amp;#41; &amp;#40;meta form&amp;#41;&amp;#41;
+                        &amp;#40;list form x&amp;#41;&amp;#41;&amp;#93;
+         &amp;#40;recur threaded &amp;#40;next forms&amp;#41;&amp;#41;&amp;#41;
+       x&amp;#41;&amp;#41;&amp;#41;
+ 
+ &amp;#40;defmacro -&amp;gt;&amp;gt;
+-  &amp;quot;Threads the expr through the forms. Inserts x as the
+-  last item in the first form, making a list of it if it is not a
++  &amp;quot;Threads the expr through the forms. Inserts x as the last item
++  in the first form, making a list of it if it is a lambda or not a
+   list already. If there are more forms, inserts the first form as the
+   last item in second form, etc.&amp;quot;
+   {:added &amp;quot;1.1&amp;quot;}
+   &amp;#91;x &amp;amp; forms&amp;#93;
+   &amp;#40;loop &amp;#91;x x, forms forms&amp;#93;
+     &amp;#40;if forms
+       &amp;#40;let &amp;#91;form &amp;#40;first forms&amp;#41;
+-            threaded &amp;#40;if &amp;#40;seq? form&amp;#41;
++            threaded &amp;#40;if &amp;#40;and &amp;#40;seq? form&amp;#41; &amp;#40;not &amp;#40;#{'fn 'fn&amp;#42;} &amp;#40;first form&amp;#41;&amp;#41;&amp;#41;&amp;#41;
+               &amp;#40;with-meta `&amp;#40;&amp;#126;&amp;#40;first form&amp;#41; &amp;#126;@&amp;#40;next form&amp;#41;  &amp;#126;x&amp;#41; &amp;#40;meta form&amp;#41;&amp;#41;
+               &amp;#40;list form x&amp;#41;&amp;#41;&amp;#93;
+         &amp;#40;recur threaded &amp;#40;next forms&amp;#41;&amp;#41;&amp;#41;
+       x&amp;#41;&amp;#41;&amp;#41;
+ 
+ &amp;#40;def map&amp;#41;
+ 
+ &amp;#40;defn &amp;#94;:private check-valid-options
+diff --git a/test/clojure/test&amp;#95;clojure/macros.clj b/test/clojure/test&amp;#95;clojure/macros.clj
+index ce17bb38..9fb1fa9e 100644
+--- a/test/clojure/test&amp;#95;clojure/macros.clj
++++ b/test/clojure/test&amp;#95;clojure/macros.clj
+@@ -106,8 +106,20 @@
+   &amp;#40;is &amp;#40;nil? &amp;#40;loop &amp;#91;&amp;#93;
+               &amp;#40;as-&amp;gt; 0 x
+                 &amp;#40;when-not &amp;#40;zero? x&amp;#41;
+                   &amp;#40;recur&amp;#41;&amp;#41;&amp;#41;&amp;#41;&amp;#41;&amp;#41;
+   &amp;#40;is &amp;#40;nil? &amp;#40;loop &amp;#91;x nil&amp;#93; &amp;#40;some-&amp;gt; x recur&amp;#41;&amp;#41;&amp;#41;&amp;#41;
+   &amp;#40;is &amp;#40;nil? &amp;#40;loop &amp;#91;x nil&amp;#93; &amp;#40;some-&amp;gt;&amp;gt; x recur&amp;#41;&amp;#41;&amp;#41;&amp;#41;
+   &amp;#40;is &amp;#40;= 0 &amp;#40;loop &amp;#91;x 0&amp;#93; &amp;#40;cond-&amp;gt; x false recur&amp;#41;&amp;#41;&amp;#41;&amp;#41;
+   &amp;#40;is &amp;#40;= 0 &amp;#40;loop &amp;#91;x 0&amp;#93; &amp;#40;cond-&amp;gt;&amp;gt; x false recur&amp;#41;&amp;#41;&amp;#41;&amp;#41;&amp;#41;
++
++&amp;#40;deftest -&amp;gt;lambda-test
++  &amp;#40;is &amp;#40;= 'a &amp;#40;-&amp;gt; 'a &amp;#40;&amp;#40;fn &amp;#91;x&amp;#93; x&amp;#41;&amp;#41;&amp;#41;&amp;#41;&amp;#41;
++  &amp;#40;is &amp;#40;= 'a &amp;#40;-&amp;gt; 'a &amp;#40;fn &amp;#91;x&amp;#93; x&amp;#41;&amp;#41;&amp;#41;&amp;#41;
++  &amp;#40;is &amp;#40;= 'a &amp;#40;-&amp;gt; 'a #&amp;#40;identity %&amp;#41;&amp;#41;&amp;#41;&amp;#41;
++  &amp;#40;is &amp;#40;= 'a &amp;#40;-&amp;gt; 'a &amp;#40;#&amp;#40;identity %&amp;#41;&amp;#41;&amp;#41;&amp;#41;&amp;#41;&amp;#41;
++
++&amp;#40;deftest -&amp;gt;&amp;gt;lambda-test
++  &amp;#40;is &amp;#40;= 'a &amp;#40;-&amp;gt;&amp;gt; 'a &amp;#40;&amp;#40;fn &amp;#91;x&amp;#93; x&amp;#41;&amp;#41;&amp;#41;&amp;#41;&amp;#41;
++  &amp;#40;is &amp;#40;= 'a &amp;#40;-&amp;gt;&amp;gt; 'a &amp;#40;fn &amp;#91;x&amp;#93; x&amp;#41;&amp;#41;&amp;#41;&amp;#41;
++  &amp;#40;is &amp;#40;= 'a &amp;#40;-&amp;gt;&amp;gt; 'a #&amp;#40;identity %&amp;#41;&amp;#41;&amp;#41;&amp;#41;
++  &amp;#40;is &amp;#40;= 'a &amp;#40;-&amp;gt;&amp;gt; 'a &amp;#40;#&amp;#40;identity %&amp;#41;&amp;#41;&amp;#41;&amp;#41;&amp;#41;&amp;#41;
+-- 
+2.21.0 &amp;#40;Apple Git-122.2&amp;#41;
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+<enclosure>
+
+</enclosure>
+<pubDate>
+Tue, 14 Jan 2020 00:00:00 -0800
+</pubDate>
+</item>
 <item>
 <guid>
 http://code.thosmos.com/posts/2020-01-04-spec-driven-db.html

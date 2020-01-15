@@ -5,7 +5,7 @@
 http://code.thosmos.com/tags.html
 </loc>
 <lastmod>
-2020-01-04
+2020-01-14
 </lastmod>
 </url>
 <url>
@@ -13,7 +13,7 @@ http://code.thosmos.com/tags.html
 http://code.thosmos.com/index.html
 </loc>
 <lastmod>
-2020-01-04
+2020-01-14
 </lastmod>
 </url>
 <url>
@@ -21,7 +21,15 @@ http://code.thosmos.com/index.html
 http://code.thosmos.com/posts/2013-05-01-geometric-algebra-with-clojure-1.html
 </loc>
 <lastmod>
-2020-01-04
+2020-01-14
+</lastmod>
+</url>
+<url>
+<loc>
+http://code.thosmos.com/posts/2020-01-14-should-threading-macros-handle-lambdas.html
+</loc>
+<lastmod>
+2020-01-14
 </lastmod>
 </url>
 <url>
@@ -29,7 +37,7 @@ http://code.thosmos.com/posts/2013-05-01-geometric-algebra-with-clojure-1.html
 http://code.thosmos.com/posts/2018-05-06-realworld-vase.html
 </loc>
 <lastmod>
-2020-01-04
+2020-01-14
 </lastmod>
 </url>
 <url>
@@ -37,7 +45,7 @@ http://code.thosmos.com/posts/2018-05-06-realworld-vase.html
 http://code.thosmos.com/posts/2015-09-08-data-driven.html
 </loc>
 <lastmod>
-2020-01-04
+2020-01-14
 </lastmod>
 </url>
 <url>
@@ -45,7 +53,7 @@ http://code.thosmos.com/posts/2015-09-08-data-driven.html
 http://code.thosmos.com/posts/2014-12-15-imagining-atomatizing-the-app.html
 </loc>
 <lastmod>
-2020-01-04
+2020-01-14
 </lastmod>
 </url>
 <url>
@@ -53,7 +61,7 @@ http://code.thosmos.com/posts/2014-12-15-imagining-atomatizing-the-app.html
 http://code.thosmos.com/posts/2020-01-04-spec-driven-db.html
 </loc>
 <lastmod>
-2020-01-04
+2020-01-14
 </lastmod>
 </url>
 <url>
@@ -61,7 +69,7 @@ http://code.thosmos.com/posts/2020-01-04-spec-driven-db.html
 http://code.thosmos.com/posts/2019-12-04-spec-driven-ui.html
 </loc>
 <lastmod>
-2020-01-04
+2020-01-14
 </lastmod>
 </url>
 <url>
@@ -69,7 +77,7 @@ http://code.thosmos.com/posts/2019-12-04-spec-driven-ui.html
 http://code.thosmos.com/posts/2017-04-02-boot-clj-startup.html
 </loc>
 <lastmod>
-2020-01-04
+2020-01-14
 </lastmod>
 </url>
 <url>
@@ -77,7 +85,7 @@ http://code.thosmos.com/posts/2017-04-02-boot-clj-startup.html
 http://code.thosmos.com/404.html
 </loc>
 <lastmod>
-2020-01-04
+2020-01-14
 </lastmod>
 </url>
 <url>
@@ -85,7 +93,7 @@ http://code.thosmos.com/404.html
 http://code.thosmos.com/tags/geometric algebra.html
 </loc>
 <lastmod>
-2020-01-04
+2020-01-14
 </lastmod>
 </url>
 <url>
@@ -93,7 +101,7 @@ http://code.thosmos.com/tags/geometric algebra.html
 http://code.thosmos.com/tags/programming.html
 </loc>
 <lastmod>
-2020-01-04
+2020-01-14
 </lastmod>
 </url>
 <url>
@@ -101,7 +109,7 @@ http://code.thosmos.com/tags/programming.html
 http://code.thosmos.com/tags/data-driven.html
 </loc>
 <lastmod>
-2020-01-04
+2020-01-14
 </lastmod>
 </url>
 <url>
@@ -109,7 +117,7 @@ http://code.thosmos.com/tags/data-driven.html
 http://code.thosmos.com/tags/clojurescript.html
 </loc>
 <lastmod>
-2020-01-04
+2020-01-14
 </lastmod>
 </url>
 <url>
@@ -117,7 +125,7 @@ http://code.thosmos.com/tags/clojurescript.html
 http://code.thosmos.com/tags/boot-clj.html
 </loc>
 <lastmod>
-2020-01-04
+2020-01-14
 </lastmod>
 </url>
 <url>
@@ -125,7 +133,7 @@ http://code.thosmos.com/tags/boot-clj.html
 http://code.thosmos.com/tags/om.html
 </loc>
 <lastmod>
-2020-01-04
+2020-01-14
 </lastmod>
 </url>
 <url>
@@ -133,7 +141,7 @@ http://code.thosmos.com/tags/om.html
 http://code.thosmos.com/tags/clojure.html
 </loc>
 <lastmod>
-2020-01-04
+2020-01-14
 </lastmod>
 </url>
 <url>
@@ -141,7 +149,7 @@ http://code.thosmos.com/tags/clojure.html
 http://code.thosmos.com/archives.html
 </loc>
 <lastmod>
-2020-01-04
+2020-01-14
 </lastmod>
 </url>
 <url>
@@ -149,7 +157,7 @@ http://code.thosmos.com/archives.html
 http://code.thosmos.com/pages/resume.html
 </loc>
 <lastmod>
-2020-01-04
+2020-01-14
 </lastmod>
 </url>
 <url>
@@ -157,7 +165,7 @@ http://code.thosmos.com/pages/resume.html
 http://code.thosmos.com/pages/about.html
 </loc>
 <lastmod>
-2020-01-04
+2020-01-14
 </lastmod>
 </url>
 </urlset>
